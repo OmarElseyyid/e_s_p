@@ -1,0 +1,17 @@
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.csproj.AssemblyReference.cache
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.Form1.resources
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.Properties.Resources.resources
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.csproj.GenerateResource.cache
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.csproj.CoreCompileInputs.cache
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\bin\Debug\crypto.exe.config
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\bin\Debug\crypto.exe
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\bin\Debug\crypto.pdb
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.exe
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.pdb
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.Forms.FormDosya.resources
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.Forms.FormMsg.resources
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.Forms.FormSifreleme.resources
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\bin\Debug\crypto.exe.manifest
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\bin\Debug\crypto.application
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.exe.manifest
+C:\Users\Mahmud\Desktop\sinama_projesi\crypto\crypto\obj\Debug\crypto.application
