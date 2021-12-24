@@ -38,6 +38,7 @@ namespace crypto.Forms
                     tb_client_ip.Text = address.ToString();
                 }
             }
+            tbKey.Text = passKey;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -65,7 +66,7 @@ namespace crypto.Forms
                     TcpListener listener = new TcpListener(IPAddress.Any, 10);
                     listener.Start();
                     client = listener.AcceptTcpClient();
-                    tb_chat.AppendText("Server Başlatıldı." + "\r\n");
+                    tb_chat.AppendText("Server Başlatıldı." + " Kullanılan Şifreleme Algoritması: " + selected_algorithm +  "\r\n");
                     STR = new StreamReader(client.GetStream());
                     STW = new StreamWriter(client.GetStream());
                     STW.AutoFlush = true;
@@ -101,7 +102,7 @@ namespace crypto.Forms
                     client.Connect(IpEnd);
                     if (client.Connected)
                     {
-                        tb_chat.AppendText("Servere Bağlandi." + "\r\n");
+                        tb_chat.AppendText("Servere Bağlandi. "+ "Kullanılan Şifreleme Algoritması: "+ selected_algorithm + "\r\n");
                         STR = new StreamReader(client.GetStream());
                         STW = new StreamWriter(client.GetStream());
                         STW.AutoFlush = true;
@@ -132,8 +133,7 @@ namespace crypto.Forms
                     }
                     else
                     {
-                        //TODO: SPN-16 sifreleme islemi...
-                        reciever = "SPN";
+                        reciever = Sifreleme_Algoritmalari.ToSPN16_Decrypt(reciever, passKey); // SPN-16 algoritması ile deşifreleme işlemi...
                     }
                     this.tb_chat.Invoke(new MethodInvoker(delegate ()
                     {
@@ -159,7 +159,7 @@ namespace crypto.Forms
                 }
                 else
                 {
-                    //TODO: SPN-16 sifreleme islemi...
+                    STW.WriteLine(Sifreleme_Algoritmalari.ToSPN16_Encrypt(TextToSend, passKey)); // SPN16 ile sifreleme islemi..
                 }
      
                 this.tb_chat.Invoke(new MethodInvoker(delegate ()

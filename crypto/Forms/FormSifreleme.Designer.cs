@@ -31,13 +31,13 @@ namespace crypto.Forms
         {
             this.btn_sifreleme = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cb_alogo = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tb_yazi = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.lblSonuc = new System.Windows.Forms.Label();
-            this.cb_alogo = new System.Windows.Forms.CheckedListBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -68,6 +68,22 @@ namespace crypto.Forms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(971, 290);
             this.panel1.TabIndex = 2;
+            // 
+            // cb_alogo
+            // 
+            this.cb_alogo.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cb_alogo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.cb_alogo.CheckOnClick = true;
+            this.cb_alogo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_alogo.FormattingEnabled = true;
+            this.cb_alogo.Items.AddRange(new object[] {
+            "SHA-256",
+            "SPN-16"});
+            this.cb_alogo.Location = new System.Drawing.Point(122, 215);
+            this.cb_alogo.Name = "cb_alogo";
+            this.cb_alogo.Size = new System.Drawing.Size(131, 66);
+            this.cb_alogo.TabIndex = 4;
+            this.cb_alogo.SelectedIndexChanged += new System.EventHandler(this.cb_alogo_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -124,25 +140,9 @@ namespace crypto.Forms
             this.lblSonuc.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSonuc.Location = new System.Drawing.Point(14, 42);
             this.lblSonuc.Name = "lblSonuc";
-            this.lblSonuc.Size = new System.Drawing.Size(239, 24);
+            this.lblSonuc.Size = new System.Drawing.Size(142, 24);
             this.lblSonuc.TabIndex = 1;
-            this.lblSonuc.Text = "sfdfyutıowtyeu8yrfıowueyf98";
-            // 
-            // cb_alogo
-            // 
-            this.cb_alogo.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cb_alogo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.cb_alogo.CheckOnClick = true;
-            this.cb_alogo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_alogo.FormattingEnabled = true;
-            this.cb_alogo.Items.AddRange(new object[] {
-            "SHA-256",
-            "SPN-16"});
-            this.cb_alogo.Location = new System.Drawing.Point(122, 215);
-            this.cb_alogo.Name = "cb_alogo";
-            this.cb_alogo.Size = new System.Drawing.Size(131, 66);
-            this.cb_alogo.TabIndex = 4;
-            this.cb_alogo.SelectedIndexChanged += new System.EventHandler(this.cb_alogo_SelectedIndexChanged);
+            this.lblSonuc.Text = "Şifrelenmiş Yazı";
             // 
             // FormSifreleme
             // 

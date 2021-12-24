@@ -60,9 +60,18 @@ namespace crypto.Forms
                     break;
 
                 case "SPN-16":
-
+                    if (sifrelenecek_yazi == "")
+                    {
+                        lblSonuc.Text = "Lütfen yazı ekleyiniz.";
+                        lblSonuc.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        sifrelenmis_yazi = Sifreleme_Algoritmalari.ToSPN16(sifrelenecek_yazi);
+                        lblSonuc.Text = sifrelenmis_yazi;
+                        lblSonuc.ForeColor = ThemeColor.SecondaryColor;
+                    }
                     break;
-
 
                 default:
                     lblSonuc.Text = "Lütfen algritmayı seçiniz.";
