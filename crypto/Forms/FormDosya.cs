@@ -3,203 +3,355 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+
 
 namespace crypto.Forms
 {
     public partial class FormDosya : Form
     {
-        private TcpClient client;
-        public StreamReader STR;
-        public StreamWriter STW;
-        public string selected_algorithm;
+        private Listener listener;
+        private TransferClient transferClient;
+        private string outputFolder;
+        private Timer tmrOverallProg;
+
+        private bool serverRunning;
 
         public FormDosya()
         {
             InitializeComponent();
+            listener = new Listener();
+            listener.Accepted += Listener_Accepted;
 
-            //get my ip address
-            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress address in localIP)
+            tmrOverallProg = new Timer();
+            tmrOverallProg.Interval = 1000;
+            tmrOverallProg.Tick += TmrOverallProg_Tick;
+
+            outputFolder = "Transfers";
+            if (!Directory.Exists(outputFolder))
             {
-                if (address.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    tb_server_ip.Text = address.ToString();
-                    tb_client_ip.Text = address.ToString();
-                }
+                Directory.CreateDirectory(outputFolder);
             }
+
+            btnConnect.Click += new EventHandler(btnConnect_Click);
+            btnStartServer.Click += new EventHandler(btnStartServer_Click);
+            btnStopServer.Click += new EventHandler(btnStopServer_Click);
+            btnSendFile.Click += new EventHandler(btnSendFile_Click);
+            btnPauseTransfer.Click += new EventHandler(btnPauseTransfer_Click);
+            btnStopTransfer.Click += new EventHandler(btnStopTransfer_Click);
+            btnOpenDir.Click += new EventHandler(btnOpenDir_Click);
+            btnClearComplete.Click += new EventHandler(btnClearComplete_Click);
+
+            btnStopServer.Enabled = false;
         }
 
-        private void sendFile(string fn)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint iPEnd = new IPEndPoint(ipAddress, 30);
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            string fileName = fn; // "c:\\filetosend.txt";
-            byte[] fileNameByte = Encoding.ASCII.GetBytes(fileName);
-            byte[] fileNameLen = BitConverter.GetBytes(fileNameByte.Length);
-            byte[] fileData = File.ReadAllBytes(fileName);
-            byte[] clinetData = new byte[4 + fileName.Length + fileData.Length];
-
-            fileNameLen.CopyTo(clinetData, 0);
-            fileNameByte.CopyTo(clinetData, 4);
-            fileData.CopyTo(clinetData, 4 + fileNameByte.Length);
-            clientSocket.Connect(iPEnd);
-            clientSocket.Send(clinetData);
-            clientSocket.Close();
-
+            deregisterEvents();
+            base.OnFormClosing(e);
         }
-        private void textBox1_DragDrop(object sender, DragEventArgs e)
+
+        private void TmrOverallProg_Tick(object sender, EventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (files != null && files.Length != 0)
+            if (transferClient == null)
             {
-                MessageBox.Show(files[0]);
-                sendFile(files[0]);
+                return;
             }
+
+            progressOverall.Value = transferClient.GetOverallProgress();
         }
 
-        private void btn_start_Click(object sender, EventArgs e)
+        private void Listener_Accepted(object sender, SocketAcceptedEventArgs e)
         {
-            if (cb_alogo_dosya.CheckedItems.Count == 0)
+            if (InvokeRequired)
             {
-                MessageBox.Show("Lütfen Algoritmayı seçiniz.", "Uyari", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Invoke(new SocketAcceptedHandler(Listener_Accepted), sender, e);
+                return;
+            }
+            listener.Stop();
+
+            transferClient = new TransferClient(e.Accepted);
+            transferClient.OutoutFolder = outputFolder;
+
+            registerEvents();
+            transferClient.Run();
+            tmrOverallProg.Start();
+            setConnectionStatus(transferClient.EndPoint.Address.ToString());
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if (transferClient == null)
+            {
+                transferClient = new TransferClient();
+                transferClient.Connect(txtCntHost.Text.Trim(), int.Parse(txtCntPort.Text.Trim()), connectCallback);
+                Enabled = false;
             }
             else
             {
-                selected_algorithm = cb_alogo_dosya.Text;
-
-                try
-                {
-                    TcpListener listener = new TcpListener(IPAddress.Any, 20);
-                    listener.Start();
-                    client = listener.AcceptTcpClient();
-                    STR = new StreamReader(client.GetStream());
-                    STW = new StreamWriter(client.GetStream());
-                    STW.AutoFlush = true;
-
-                    backgroundWorker1.RunWorkerAsync();
-                    backgroundWorker2.WorkerSupportsCancellation = true;
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message.ToString());
-                }
-
+                transferClient.Close();
+                transferClient = null;
             }
         }
-        private void btn_connect_Click(object sender, EventArgs e)
+
+        private void connectCallback(object sender, string error)
         {
-            if (cb_alogo_dosya2.CheckedItems.Count == 0)
+            if (InvokeRequired)
             {
-                MessageBox.Show("Lütfen Algoritmayı seçiniz.", "Uyari", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Invoke(new ConnectCallback(connectCallback), sender, error);
+                return;
+            }
+            Enabled = true;
+            if (error != null)
+            {
+                transferClient.Close();
+                transferClient = null;
+                MessageBox.Show(error, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            registerEvents();
+            transferClient.OutoutFolder = outputFolder;
+            transferClient.Run();
+            setConnectionStatus(transferClient.EndPoint.Address.ToString());
+            tmrOverallProg.Start();
+            btnConnect.Text = "Disconect";
+        }
+
+        private void registerEvents()
+        {
+            transferClient.Complete += TransferClient_Complete;
+            transferClient.Disconnected += TransferClient_Disconnected;
+            transferClient.ProgressChanged += TransferClient_ProgressChanged;
+            transferClient.Queued += TransferClient_Queued;
+            transferClient.Stopped += TransferClient_Stopped;
+
+        }
+
+        private void TransferClient_Stopped(object sender, TransferQueue queue)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new TransferEventHandler(TransferClient_Stopped), sender, queue);
+                return;
+            }
+            lstTransfers.Items[queue.ID.ToString()].Remove();
+        }
+
+        private void TransferClient_Queued(object sender, TransferQueue queue)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new TransferEventHandler(TransferClient_Queued), sender, queue);
+                return;
+            }
+            ListViewItem i = new ListViewItem();
+            i.Text = queue.ID.ToString();
+            i.SubItems.Add(queue.ToString());
+            i.SubItems.Add(queue.Type == QueueType.Download ? "Download" : "Upload");
+            i.SubItems.Add("0%");
+            i.Tag = queue;
+            i.Name = queue.ID.ToString();
+            lstTransfers.Items.Add(i);
+            i.EnsureVisible();
+
+            if (queue.Type == QueueType.Download)
+            {
+                transferClient.StartTransfer(queue);
+            }
+        }
+
+        private void TransferClient_ProgressChanged(object sender, TransferQueue queue)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new TransferEventHandler(TransferClient_ProgressChanged), sender, queue);
+                return;
+            }
+            lstTransfers.Items[queue.ID.ToString()].SubItems[3].Text = queue.Progress + "%";
+        }
+
+        private void TransferClient_Disconnected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EventHandler(TransferClient_Disconnected), sender, e);
+                return;
+            }
+            deregisterEvents();
+
+            foreach (ListViewItem item in lstTransfers.Items)
+            {
+                TransferQueue queue = (TransferQueue)item.Tag;
+                queue.Close();
+            }
+            lstTransfers.Items.Clear();
+            progressOverall.Value = 0;
+
+            transferClient = null;
+            setConnectionStatus("-");
+
+            if (serverRunning)
+            {
+                listener.Start(int.Parse(txtServerPort.Text.Trim()));
+                setConnectionStatus("Waiting...");
             }
             else
             {
-                selected_algorithm = cb_alogo_dosya2.Text;
+                btnConnect.Text = "Connect";
+            }
+        }
 
-                try
+        private void TransferClient_Complete(object sender, TransferQueue queue)
+        {
+            System.Media.SystemSounds.Asterisk.Play();
+        }
+
+        private void deregisterEvents()
+        {
+            if (transferClient== null)
+            {
+                return;
+            }
+            transferClient.Complete -= TransferClient_Complete;
+            transferClient.Disconnected -= TransferClient_Disconnected;
+            transferClient.ProgressChanged -= TransferClient_ProgressChanged;
+            transferClient.Queued -= TransferClient_Queued;
+            transferClient.Stopped -= TransferClient_Stopped;
+        }
+
+        private void setConnectionStatus(string connectedTo)
+        {
+            lblConnected.Text = "Connection: " + connectedTo;
+        }
+
+        private void btnStartServer_Click(object sender, EventArgs e)
+        {
+            if (serverRunning)
+            {
+                return;
+            }
+            serverRunning = true;
+            try
+            {
+                listener.Start(int.Parse(txtServerPort.Text.Trim()));
+                setConnectionStatus("Waiting..");
+                btnStartServer.Enabled = false;
+                btnStopServer.Enabled = true;
+            }
+            catch 
+            {
+                MessageBox.Show("Unable to listen on port "+ txtServerPort.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnStopServer_Click(object sender, EventArgs e)
+        {
+            if (!serverRunning)
+            {
+                return;
+            }
+            if (transferClient != null)
+            {
+                transferClient.Close();
+            }
+            listener.Stop();
+            tmrOverallProg.Stop();
+            setConnectionStatus("-");
+            serverRunning = false;
+            btnStartServer.Enabled = true;
+            btnStopServer.Enabled = false;
+
+        }
+
+
+        private void btnClearComplete_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem i in lstTransfers.Items)
+            {
+                TransferQueue queue = (TransferQueue)i.Tag;
+
+                if (queue.Progress == 100 || !queue.Running)
                 {
-                    client = new TcpClient();
-                    IPEndPoint IpEnd = new IPEndPoint(IPAddress.Parse(tb_client_ip.Text), 20);
+                    i.Remove();
+                }
+            }
+        }
 
-                    client.Connect(IpEnd);
-                    if (client.Connected)
+        private void btnOpenDir_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fb = new FolderBrowserDialog())
+            {
+                if (fb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    outputFolder = fb.SelectedPath;
+
+                    if (transferClient != null)
                     {
-                        
-                        STR = new StreamReader(client.GetStream());
-                        STW = new StreamWriter(client.GetStream());
-                        STW.AutoFlush = true;
-                        backgroundWorker1.RunWorkerAsync();
-                        backgroundWorker2.WorkerSupportsCancellation = true;
+                        transferClient.OutoutFolder = outputFolder;
                     }
 
+                    txtSaveDir.Text = outputFolder;
+
                 }
-                catch (Exception ex)
+                
+            }
+        }
+
+        private void btnSendFile_Click(object sender, EventArgs e)
+        {
+            if (transferClient == null)
+            {
+                return;
+            }
+
+            using (OpenFileDialog o = new OpenFileDialog())
+            {
+                o.Filter = "txt files (*.txt)|*.txt;| Image Files|*.png;*.gif;| Data File|*.dat;";
+                o.Multiselect = true;
+
+                if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    MessageBox.Show(ex.Message.ToString());
+                    foreach (string file in o.FileNames)
+                    {
+                        transferClient.QueueTransfer(file);
+                    }
                 }
             }
-        }
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
 
         }
-        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+
+        private void btnPauseTransfer_Click(object sender, EventArgs e)
         {
-            if (client.Connected)
+            if (transferClient == null)
             {
-                //if (selected_algorithm == "SHA-256")
-                //{
-                //    STW.WriteLine(Sifreleme_Algoritmalari.Encrypt(passKey, TextToSend)); // SHA256 ile sifreleme islemi..
-                //}
-                //else
-                //{
-                //    //TODO: SPN-16 sifreleme islemi...
-                //}
-
-               
-
+                return;
             }
-            else
+            foreach (ListViewItem i in lstTransfers.SelectedItems)
             {
-                MessageBox.Show("Gönderim Başarsız!");
-            }
-
-            backgroundWorker2.CancelAsync();
-        }
-
-
-        private void cb_alogo_dosya_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int index = cb_alogo_dosya.SelectedIndex;
-            int count = cb_alogo_dosya.Items.Count;
-            for (int x = 0; x < count; x++)
-            {
-                if (index != x)
-                {
-                    cb_alogo_dosya.SetItemChecked(x, false);
-                }
+                TransferQueue queue = (TransferQueue)i.Tag;
+                queue.Client.PauseTransfer(queue);
             }
         }
-        private void cb_alogo_dosya2_SelectedIndexChanged(object sender, EventArgs e)
+
+        private void btnStopTransfer_Click(object sender, EventArgs e)
         {
-            int index = cb_alogo_dosya2.SelectedIndex;
-            int count = cb_alogo_dosya2.Items.Count;
-            for (int x = 0; x < count; x++)
+            if (transferClient == null)
             {
-                if (index != x)
-                {
-                    cb_alogo_dosya2.SetItemChecked(x, false);
-                }
+                return;
             }
-        }
-        //load theme here!..
-        private void FormDosya_Load(object sender, EventArgs e)
-        {
-            LoadTheme();
-        }
-        private void LoadTheme()
-        {
-            foreach (Control btns in this.Controls)
+            foreach (ListViewItem i in lstTransfers.SelectedItems)
             {
-                if (btns.GetType() == typeof(Button))
-                {
-                    Button btn = (Button)btns;
-                    btn.BackColor = ThemeColor.PrimaryColor;
-                    btn.ForeColor = Color.White;
-                    btn.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
-                }
+                TransferQueue queue = (TransferQueue)i.Tag;
+                queue.Client.StopTransfer(queue);
+                i.Remove();
             }
+            progressOverall.Value = 0;
         }
 
     }
+
 }
