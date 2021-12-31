@@ -15,10 +15,10 @@ Projede 2 adet katman vardır.
 - **crypto.UnitTest katmanı:** white box testleri (Unit test) için kullandığımız katman.
 
 ## Proje Resimleri 
-![alt text](https://github.com/[OmarElseyyid]/[e_s_p]/blob/[main]/images/1.png?raw=true)
-![alt text](https://github.com/[OmarElseyyid]/[e_s_p]/blob/[main]/images/2.png?raw=true)
-![alt text](https://github.com/[OmarElseyyid]/[e_s_p]/blob/[main]/images/3.png?raw=true)
+![alt text](https://github.com/OmarElseyyid/e_s_p/blob/main/images/1.png?raw=true)
+![alt text](https://github.com/OmarElseyyid/e_s_p/blob/main/images/2.png?raw=true)
+![alt text](https://github.com/OmarElseyyid/e_s_p/blob/main/images/3.png?raw=true)
 
 ## Kiviyat Grafiği ve Block Histogram
-![alt text](https://github.com/[OmarElseyyid]/[e_s_p]/blob/[main]/images/Kiviat.png?raw=true)
-![alt text](https://github.com/[OmarElseyyid]/[e_s_p]/blob/[main]/images/histogram.png?raw=true)
+![alt text](https://github.com/OmarElseyyid/e_s_p/blob/main/images/Kiviat.png?raw=true)
+![alt text](https://github.com/OmarElseyyid/e_s_p/blob/main/images/histogram.png?raw=true)
