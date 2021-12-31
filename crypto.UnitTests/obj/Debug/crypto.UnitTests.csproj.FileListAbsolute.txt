@@ -14,3 +14,8 @@ C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.
 C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.dll
 C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.pdb
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\WebDriver.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\xunit.abstractions.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\xunit.core.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\xunit.abstractions.xml
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\xunit.core.xml
