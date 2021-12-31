@@ -1,0 +1,16 @@
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.csproj.AssemblyReference.cache
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.csproj.CoreCompileInputs.cache
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\crypto.UnitTests.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\crypto.UnitTests.pdb
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\crypto.exe
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\crypto.pdb
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\crypto.exe.config
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.dll
+C:\Users\Mahmud\Desktop\e_s_p\crypto.UnitTests\obj\Debug\crypto.UnitTests.pdb

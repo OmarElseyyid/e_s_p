@@ -196,12 +196,12 @@ namespace crypto
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(199, 236);
+            this.label1.Location = new System.Drawing.Point(191, 236);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(431, 96);
+            this.label1.Size = new System.Drawing.Size(431, 144);
             this.label1.TabIndex = 0;
             this.label1.Text = "Yazılım Sınama Ödevi\r\n\r\nMahmud ELSEYYİDÖMER - 192802066\r\nABDULSELAM MUHAMMED HASA" +
-    "N - 192803003\r\n";
+    "N - 192803003\r\nCihat ŞENEL - 192805009\r\nYasin YILDIRIM - 182804013";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
